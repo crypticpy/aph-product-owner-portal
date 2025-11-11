@@ -238,7 +238,7 @@ function App() {
                   </ul>
                 </div>
                 <div className="card__actions">
-                  <a className="btn btn--primary" href="#" aria-label="Download complete template pack">Download Pack</a>
+                  <button className="btn btn--primary" onClick={() => alert('This is a demo feature. In production, this would download the complete template pack.')} aria-label="Download complete template pack">Download Pack</button>
                 </div>
               </article>
 
@@ -260,7 +260,7 @@ function App() {
                   </ul>
                 </div>
                 <div className="card__actions">
-                  <a className="btn btn--primary" href="#" aria-label="Access core training materials">Access Training</a>
+                  <button className="btn btn--primary" onClick={() => alert('This is a demo feature. In production, this would provide access to core training materials.')} aria-label="Access core training materials">Access Training</button>
                 </div>
               </article>
 
@@ -282,7 +282,7 @@ function App() {
                   </ul>
                 </div>
                 <div className="card__actions">
-                  <a className="btn btn--primary" href="#" aria-label="Read compliance and guidelines">Read Guidelines</a>
+                  <button className="btn btn--primary" onClick={() => alert('This is a demo feature. In production, this would provide access to compliance guidelines and policies.')} aria-label="Read compliance and guidelines">Read Guidelines</button>
                 </div>
               </article>
             </div>
@@ -336,7 +336,7 @@ function App() {
                   </ul>
                 </div>
                 <div className="card__actions">
-                  <a className="btn btn--primary" href="#" aria-label="Register for office hours">Register Now</a>
+                  <button className="btn btn--primary" onClick={() => alert('This is a demo feature. In production, this would allow you to register for weekly office hours.')} aria-label="Register for office hours">Register Now</button>
                 </div>
               </article>
 
@@ -358,7 +358,7 @@ function App() {
                   </ul>
                 </div>
                 <div className="card__actions">
-                  <a className="btn btn--primary" href="#" aria-label="Join Product Owner community">Join Community</a>
+                  <button className="btn btn--primary" onClick={() => alert('This is a demo feature. In production, this would allow you to join the Product Owner community and access collaboration tools.')} aria-label="Join Product Owner community">Join Community</button>
                 </div>
               </article>
             </div>

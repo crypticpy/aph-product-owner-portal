@@ -156,7 +156,12 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
 
             <div className="module-list">
               {nextModules.map((module, index) => (
-                <div key={module.id} className="module-item">
+                <button
+                  key={module.id}
+                  className="module-item module-item-clickable"
+                  onClick={onStartLearning}
+                  aria-label={`Start module: ${module.title}`}
+                >
                   <div className="module-number">{completedCount + index + 1}</div>
                   <div className="module-info">
                     <h4>{module.title}</h4>
@@ -171,7 +176,10 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
                       </span>
                     </div>
                   </div>
-                </div>
+                  <span className="material-symbols-rounded" style={{ fontSize: '24px', color: 'var(--color-primary)', marginLeft: 'auto' }} aria-hidden="true">
+                    arrow_forward
+                  </span>
+                </button>
               ))}
             </div>
           </div>
@@ -451,6 +459,20 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
           border-radius: var(--radius-sm);
           border-left: 4px solid var(--color-primary);
           transition: all 0.2s;
+        }
+
+        .module-item-clickable {
+          border: none;
+          text-align: left;
+          width: 100%;
+          cursor: pointer;
+          align-items: center;
+        }
+
+        .module-item-clickable:hover {
+          transform: translateX(4px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          background: white;
         }
 
         .module-item:hover {

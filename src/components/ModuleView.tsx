@@ -71,18 +71,29 @@ export function ModuleView({
       {/* Header with progress */}
       <div className="module-header">
         <div className="module-header-content">
-          <div className="module-breadcrumb">
+          <div className="module-header-top">
+            <div className="module-breadcrumb">
+              <button
+                className="breadcrumb-link"
+                onClick={onBackToDashboard}
+                aria-label="Return to dashboard"
+              >
+                <span className="material-symbols-rounded" aria-hidden="true">home</span>
+              </button>
+              <span>/</span>
+              <span style={{ textTransform: 'capitalize' }}>{module.category.replace('-', ' ')}</span>
+              <span>/</span>
+              <span>Module {moduleNumber}</span>
+            </div>
+
             <button
-              className="breadcrumb-link"
+              className="btn btn--secondary-light"
               onClick={onBackToDashboard}
               aria-label="Return to dashboard"
             >
-              <span className="material-symbols-rounded" aria-hidden="true">home</span>
+              <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">home</span>
+              Back to Dashboard
             </button>
-            <span>/</span>
-            <span style={{ textTransform: 'capitalize' }}>{module.category.replace('-', ' ')}</span>
-            <span>/</span>
-            <span>Module {moduleNumber}</span>
           </div>
 
           <div className="module-progress">
@@ -288,6 +299,15 @@ export function ModuleView({
           margin: 0 auto;
         }
 
+        .module-header-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: var(--space-4);
+          gap: var(--space-4);
+          flex-wrap: wrap;
+        }
+
         .module-breadcrumb {
           display: flex;
           align-items: center;
@@ -295,7 +315,6 @@ export function ModuleView({
           font-size: var(--step--1);
           color: var(--color-text);
           opacity: 0.7;
-          margin-bottom: var(--space-3);
         }
 
         .module-breadcrumb .material-symbols-rounded {
