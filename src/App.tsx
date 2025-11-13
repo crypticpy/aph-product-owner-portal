@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './index.css';
+import { ThemeProvider, createTheme } from '@fluentui/react';
+import { Icon } from '@fluentui/react/lib/Icon';
 import { Assessment } from './components/Assessment';
 import { Dashboard } from './components/Dashboard';
 import { ModuleView } from './components/ModuleView';
@@ -17,6 +19,43 @@ import {
   updateCurrentModule,
   clearAllData
 } from './utils/storage';
+
+// APH Brand Theme for Fluent UI (SharePoint-compatible)
+const aphTheme = createTheme({
+  palette: {
+    themePrimary: '#009F4D',        // APH Green
+    themeLighterAlt: '#f0faf4',
+    themeLighter: '#ccf0dc',
+    themeLight: '#a3e4c1',
+    themeTertiary: '#55ca8b',
+    themeSecondary: '#1ab15e',
+    themeDarkAlt: '#008f45',
+    themeDark: '#00783a',
+    themeDarker: '#00582b',
+    neutralLighterAlt: '#faf9f8',
+    neutralLighter: '#f3f2f1',
+    neutralLight: '#edebe9',
+    neutralQuaternaryAlt: '#e1dfdd',
+    neutralQuaternary: '#d0d0d0',
+    neutralTertiaryAlt: '#c8c6c4',
+    neutralTertiary: '#a19f9d',
+    neutralSecondary: '#605e5c',
+    neutralSecondaryAlt: '#8a8886',
+    neutralPrimaryAlt: '#3b3a39',
+    neutralPrimary: '#22254E',      // APH Dark Blue
+    neutralDark: '#201f1e',
+    black: '#000000',
+    white: '#ffffff',
+  },
+  fonts: {
+    small: { fontSize: '14px' },
+    medium: { fontSize: '16px' },
+    mediumPlus: { fontSize: '18px' },
+    large: { fontSize: '20px' },
+    xLarge: { fontSize: '24px' },
+    xxLarge: { fontSize: '32px' },
+  },
+});
 
 type ViewMode = 'assessment' | 'dashboard' | 'module' | 'resources';
 
@@ -138,14 +177,18 @@ function App() {
 
   // Render based on view mode
   if (viewMode === 'assessment') {
-    return <Assessment onComplete={handleAssessmentComplete} />;
+    return (
+      <ThemeProvider theme={aphTheme}>
+        <Assessment onComplete={handleAssessmentComplete} />
+      </ThemeProvider>
+    );
   }
 
   if (viewMode === 'module' && userProfile && pathModules[currentModuleIndex]) {
     const currentModule = pathModules[currentModuleIndex];
 
     return (
-      <>
+      <ThemeProvider theme={aphTheme}>
         <ModuleView
           module={currentModule}
           moduleNumber={currentModuleIndex + 1}
@@ -162,15 +205,15 @@ function App() {
           hasNext={currentModuleIndex < pathModules.length - 1}
         />
         <ResetButton onReset={handleDemoReset} />
-      </>
+      </ThemeProvider>
     );
   }
 
   if (viewMode === 'dashboard' && userProfile) {
     return (
-      <>
+      <ThemeProvider theme={aphTheme}>
         <div className="demo-banner">
-          <span className="material-symbols-rounded" style={{ fontSize: '16px' }} aria-hidden="true">science</span>
+          <Icon iconName="Beaker" style={{ fontSize: '16px' }} aria-hidden="true" />
           Demo Mode Active - Your progress will not be saved permanently
         </div>
 
@@ -192,11 +235,11 @@ function App() {
             </a>
             <nav className="nav-links" aria-label="Main navigation">
               <button className="nav-link" onClick={() => setViewMode('dashboard')}>
-                <span className="material-symbols-rounded" aria-hidden="true">home</span>
+                <Icon iconName="Home" aria-hidden="true" />
                 Dashboard
               </button>
               <button className="nav-link" onClick={handleStartLearning}>
-                <span className="material-symbols-rounded" aria-hidden="true">school</span>
+                <Icon iconName="Education" aria-hidden="true" />
                 Continue Learning
               </button>
               <a href="#resources" className="nav-link">Resources</a>
@@ -222,7 +265,7 @@ function App() {
               {/* Complete Template Pack */}
               <article className="card">
                 <div className="card__header">
-                  <span className="icon material-symbols-rounded" aria-hidden="true">description</span>
+                  <Icon iconName="DocumentSet" className="icon" aria-hidden="true" />
                   <div>
                     <h3 className="h3">Complete Template Pack</h3>
                     <div className="card__meta">All templates bundled</div>
@@ -245,7 +288,7 @@ function App() {
               {/* Core Training */}
               <article className="card">
                 <div className="card__header">
-                  <span className="icon material-symbols-rounded" aria-hidden="true">school</span>
+                  <Icon iconName="Education" className="icon" aria-hidden="true" />
                   <div>
                     <h3 className="h3">Core Training</h3>
                     <div className="card__meta">Essential skills only</div>
@@ -267,7 +310,7 @@ function App() {
               {/* Compliance & Guidelines */}
               <article className="card">
                 <div className="card__header">
-                  <span className="icon material-symbols-rounded" aria-hidden="true">policy</span>
+                  <Icon iconName="ComplianceAudit" className="icon" aria-hidden="true" />
                   <div>
                     <h3 className="h3">Compliance & Guidelines</h3>
                     <div className="card__meta">Streamlined documentation</div>
@@ -299,7 +342,7 @@ function App() {
               {/* Direct Support */}
               <article className="card">
                 <div className="card__header">
-                  <span className="icon material-symbols-rounded" aria-hidden="true">support_agent</span>
+                  <Icon iconName="ContactCard" className="icon" aria-hidden="true" />
                   <div>
                     <h3 className="h3">Direct Support</h3>
                     <div className="card__meta">Available 9 AM - 5 PM</div>
@@ -321,7 +364,7 @@ function App() {
               {/* Office Hours */}
               <article className="card">
                 <div className="card__header">
-                  <span className="icon material-symbols-rounded" aria-hidden="true">groups</span>
+                  <Icon iconName="Group" className="icon" aria-hidden="true" />
                   <div>
                     <h3 className="h3">Office Hours</h3>
                     <div className="card__meta">Weekly Sessions</div>
@@ -343,7 +386,7 @@ function App() {
               {/* Community */}
               <article className="card">
                 <div className="card__header">
-                  <span className="icon material-symbols-rounded" aria-hidden="true">forum</span>
+                  <Icon iconName="MessageFill" className="icon" aria-hidden="true" />
                   <div>
                     <h3 className="h3">Product Owner Community</h3>
                     <div className="card__meta">Collaborative Network</div>
@@ -366,12 +409,16 @@ function App() {
         </section>
 
         <ResetButton onReset={handleDemoReset} />
-      </>
+      </ThemeProvider>
     );
   }
 
   // Fallback
-  return <Assessment onComplete={handleAssessmentComplete} />;
+  return (
+    <ThemeProvider theme={aphTheme}>
+      <Assessment onComplete={handleAssessmentComplete} />
+    </ThemeProvider>
+  );
 }
 
 export default App;

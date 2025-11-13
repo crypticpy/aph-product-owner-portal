@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Icon } from '@fluentui/react/lib/Icon';
 
 interface ResetButtonProps {
   onReset: () => void;
@@ -41,7 +42,7 @@ export function ResetButton({ onReset }: ResetButtonProps) {
         title="Reset Demo Session"
         aria-label="Reset progress and start over"
       >
-        <span className="material-symbols-rounded" aria-hidden="true">restart_alt</span>
+        <Icon iconName="RevToggleKey" aria-hidden="true" />
       </button>
 
       {/* Confirmation Modal */}
@@ -49,9 +50,7 @@ export function ResetButton({ onReset }: ResetButtonProps) {
         <div className="modal-backdrop" onClick={() => setShowConfirmation(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <span className="material-symbols-rounded" style={{ fontSize: '48px', color: 'var(--color-warning)' }} aria-hidden="true">
-                warning
-              </span>
+              <Icon iconName="Warning" style={{ fontSize: '48px', color: 'var(--color-warning)' }} aria-hidden="true" />
               <h2 className="h3">Reset All Progress?</h2>
             </div>
             <p>This will clear all your progress and return you to the welcome screen. This action cannot be undone.</p>
@@ -167,10 +166,6 @@ export function ResetButton({ onReset }: ResetButtonProps) {
             height: 48px;
             bottom: 16px;
             right: 16px;
-          }
-
-          .reset-fab .material-symbols-rounded {
-            font-size: 20px;
           }
         }
       `}</style>

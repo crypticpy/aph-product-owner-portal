@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Icon } from '@fluentui/react/lib/Icon';
+import Markdown from 'markdown-to-jsx';
 import { Module } from '../types';
-import ReactMarkdown from 'react-markdown';
 
 interface ModuleViewProps {
   module: Module;
@@ -78,7 +79,7 @@ export function ModuleView({
                 onClick={onBackToDashboard}
                 aria-label="Return to dashboard"
               >
-                <span className="material-symbols-rounded" aria-hidden="true">home</span>
+                <Icon iconName="Home" style={{ fontSize: '18px' }} aria-hidden="true" />
               </button>
               <span>/</span>
               <span style={{ textTransform: 'capitalize' }}>{module.category.replace('-', ' ')}</span>
@@ -91,7 +92,7 @@ export function ModuleView({
               onClick={onBackToDashboard}
               aria-label="Return to dashboard"
             >
-              <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">home</span>
+              <Icon iconName="Home" style={{ fontSize: '20px' }} aria-hidden="true" />
               Back to Dashboard
             </button>
           </div>
@@ -121,7 +122,7 @@ export function ModuleView({
 
           <div className="module-tags">
             <span className="module-duration">
-              <span className="material-symbols-rounded" aria-hidden="true">schedule</span>
+              <Icon iconName="Clock" style={{ fontSize: '16px' }} aria-hidden="true" />
               {module.duration} min
             </span>
             <span className={`priority-badge priority-${module.priority}`}>
@@ -131,7 +132,7 @@ export function ModuleView({
             </span>
             {isCompleted && (
               <span className="completed-badge">
-                <span className="material-symbols-rounded" aria-hidden="true">check_circle</span>
+                <Icon iconName="CompletedSolid" style={{ fontSize: '16px' }} aria-hidden="true" />
                 Completed
               </span>
             )}
@@ -140,14 +141,14 @@ export function ModuleView({
 
         {/* Main content */}
         <div className="module-markdown-content">
-          <ReactMarkdown>{module.content}</ReactMarkdown>
+          <Markdown>{module.content}</Markdown>
         </div>
 
         {/* Check question */}
         {showCheckQuestion && module.checkQuestion && (
           <div className="check-question">
-            <h3 className="h3">
-              <span className="material-symbols-rounded" aria-hidden="true">quiz</span>
+            <h3 className="h3" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <Icon iconName="QuestionCircle" style={{ color: 'var(--color-brand-blue)' }} aria-hidden="true" />
               Quick Check
             </h3>
             <p style={{ marginBottom: 'var(--space-4)' }}>{module.checkQuestion.question}</p>
@@ -175,10 +176,10 @@ export function ModuleView({
                   <span className="answer-letter">{String.fromCharCode(65 + index)}</span>
                   <span>{option}</span>
                   {isAnswerCorrect !== null && index === module.checkQuestion!.correctAnswer && (
-                    <span className="material-symbols-rounded check-icon" aria-hidden="true">check_circle</span>
+                    <Icon iconName="CompletedSolid" className="check-icon" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
                   )}
                   {isAnswerCorrect !== null && selectedAnswer === index && index !== module.checkQuestion!.correctAnswer && (
-                    <span className="material-symbols-rounded check-icon" aria-hidden="true">cancel</span>
+                    <Icon iconName="StatusErrorFull" className="check-icon" style={{ color: 'var(--color-danger)' }} aria-hidden="true" />
                   )}
                 </button>
               ))}
@@ -186,14 +187,14 @@ export function ModuleView({
 
             {isAnswerCorrect === false && (
               <div className="feedback-message error">
-                <span className="material-symbols-rounded" aria-hidden="true">info</span>
+                <Icon iconName="Info" aria-hidden="true" />
                 Not quite! Review the content and try again, or skip for now.
               </div>
             )}
 
             {isAnswerCorrect === true && (
               <div className="feedback-message success">
-                <span className="material-symbols-rounded" aria-hidden="true">celebration</span>
+                <Icon iconName="Balloons" aria-hidden="true" />
                 🎉 Excellent! You've got it! {hasNext ? 'Moving to next module...' : 'Module complete!'}
               </div>
             )}
@@ -219,7 +220,7 @@ export function ModuleView({
               onClick={onPrevious}
               disabled={!hasPrevious}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">arrow_back</span>
+              <Icon iconName="ChevronLeft" style={{ fontSize: '20px' }} aria-hidden="true" />
               Previous
             </button>
           </div>
@@ -230,9 +231,7 @@ export function ModuleView({
               onClick={onBookmark}
               title={isBookmarked ? 'Remove bookmark' : 'Bookmark for later'}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">
-                {isBookmarked ? 'bookmark' : 'bookmark_border'}
-              </span>
+              <Icon iconName={isBookmarked ? 'FavoriteStar' : 'FavoriteStarFill'} style={{ fontSize: '20px' }} aria-hidden="true" />
             </button>
 
             {!isCompleted && (
@@ -249,7 +248,7 @@ export function ModuleView({
                   onClick={handleMarkComplete}
                 >
                   {module.checkQuestion && !showCheckQuestion ? 'Take Quick Check' : 'Mark Complete'}
-                  <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">check</span>
+                  <Icon iconName="CheckMark" style={{ fontSize: '20px' }} aria-hidden="true" />
                 </button>
               </>
             )}
@@ -260,7 +259,7 @@ export function ModuleView({
                 onClick={onNext}
               >
                 Next Module
-                <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">arrow_forward</span>
+                <Icon iconName="ChevronRight" style={{ fontSize: '20px' }} aria-hidden="true" />
               </button>
             )}
 
@@ -270,7 +269,7 @@ export function ModuleView({
                 onClick={onBackToDashboard}
               >
                 Back to Dashboard
-                <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">home</span>
+                <Icon iconName="Home" style={{ fontSize: '20px' }} aria-hidden="true" />
               </button>
             )}
           </div>
@@ -317,10 +316,6 @@ export function ModuleView({
           opacity: 0.7;
         }
 
-        .module-breadcrumb .material-symbols-rounded {
-          font-size: 18px;
-        }
-
         .breadcrumb-link {
           background: none;
           border: none;
@@ -335,10 +330,6 @@ export function ModuleView({
         .breadcrumb-link:hover {
           opacity: 1;
           color: var(--color-primary);
-        }
-
-        .breadcrumb-link .material-symbols-rounded {
-          font-size: 18px;
         }
 
         .module-progress {
@@ -413,10 +404,6 @@ export function ModuleView({
           font-weight: 600;
         }
 
-        .module-duration .material-symbols-rounded {
-          font-size: 16px;
-        }
-
         .priority-badge {
           padding: var(--space-2) var(--space-3);
           border-radius: var(--radius-sm);
@@ -449,10 +436,6 @@ export function ModuleView({
           border-radius: var(--radius-sm);
           font-size: var(--step--1);
           font-weight: 600;
-        }
-
-        .completed-badge .material-symbols-rounded {
-          font-size: 16px;
         }
 
         .module-markdown-content {
@@ -516,17 +499,6 @@ export function ModuleView({
           border-radius: var(--radius-md);
           margin-top: var(--space-6);
           border: 2px solid var(--color-brand-blue);
-        }
-
-        .check-question h3 {
-          display: flex;
-          align-items: center;
-          gap: var(--space-2);
-          margin-bottom: var(--space-4);
-        }
-
-        .check-question h3 .material-symbols-rounded {
-          color: var(--color-brand-blue);
         }
 
         .answer-options {
@@ -593,14 +565,6 @@ export function ModuleView({
         .check-icon {
           margin-left: auto;
           flex-shrink: 0;
-        }
-
-        .answer-option.correct .check-icon {
-          color: var(--color-primary);
-        }
-
-        .answer-option.incorrect .check-icon {
-          color: var(--color-danger);
         }
 
         .feedback-message {

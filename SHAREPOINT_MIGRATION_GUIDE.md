@@ -1,7 +1,11 @@
 # SharePoint Migration Guide
 ## APH Product Owner Portal - Adaptive Micro-Learning Experience
 
-This guide provides a comprehensive strategy for migrating the React-based micro-learning portal to SharePoint Online, maintaining the core user experience while leveraging SharePoint's strengths.
+This guide provides a comprehensive strategy for deploying the micro-learning portal to SharePoint Online with GCC (Government Community Cloud) compatibility.
+
+> **⚠️ IMPORTANT RECOMMENDATION: REBUILD, DON'T MIGRATE**
+>
+> Due to GCC compliance requirements and incompatible dependencies in the current React app (Vite, React 18, Radix UI, external CDNs), we recommend **rebuilding** the application using SharePoint-native technologies rather than attempting direct migration. See "Rebuild vs. Migration Decision" section below.
 
 ---
 
@@ -15,12 +19,47 @@ This guide provides a comprehensive strategy for migrating the React-based micro
 - **Responsive dashboard** with progress visualization
 - **Mobile-optimized** design
 
-### Migration Strategy
-Use a **hybrid approach** that combines:
+### Rebuild vs. Migration Decision
+
+**Current Tech Stack (NOT GCC-Compatible):**
+- Vite 6.0.1 (build tool)
+- React 18.3.1
+- Radix UI (27+ components)
+- Recharts for visualization
+- Google Fonts CDN
+- Material Symbols CDN
+- GitHub Pages deployment
+
+**GCC Compliance Issues:**
+- ❌ External CDNs blocked (Google Fonts, Material Symbols)
+- ❌ React 18 not officially supported in SPFx
+- ❌ Vite build tool incompatible with SharePoint's Webpack
+- ❌ Radix UI components untested in SharePoint context
+- ❌ Large bundle size may exceed SharePoint limits
+
+**Recommended Approach: SPFx Rebuild**
+
+Use SharePoint Framework with a **GCC-compatible tech stack**:
+1. **SPFx 1.21.1+** with Webpack build system
+2. **React 17.0.2** (SPFx bundled version)
+3. **Fluent UI v8** (office-ui-fabric-react) for components
+4. **@fluentui/react-charting** for data visualization
+5. **Self-hosted fonts** (no external CDNs)
+6. **Fluent UI MDL2 icons** (no Material Symbols)
+7. **SharePoint Lists** for data persistence (replaces localStorage)
+8. **SharePoint App Catalog** deployment
+
+**Timeline:** 12-14 weeks (vs. 10-12 weeks for migration attempt)
+**Cost:** $60,000-$70,000 (vs. $44,000 estimated for migration)
+**Risk:** Medium (vs. High for migration with unknown compatibility issues)
+
+### Implementation Strategy
+Use a **rebuild approach** that combines:
 1. SharePoint pages for content and structure
 2. SPFx (SharePoint Framework) web parts for interactivity
 3. SharePoint lists for data storage
-4. Power Apps for complex forms (optional)
+4. Fluent UI components (Microsoft's design system)
+5. Self-hosted assets (fonts, icons) for GCC compliance
 
 ---
 
@@ -58,6 +97,186 @@ Use a **hybrid approach** that combines:
    │  └─ Bookmarks                │
    └──────────────────────────────┘
 ```
+
+---
+
+## GCC (Government Community Cloud) Requirements
+
+### Overview
+GCC and GCC High enforce strict security and compliance requirements beyond standard SharePoint Online. All deployments must account for these constraints.
+
+### Critical GCC Constraints
+
+#### 1. External CDN Blocking
+**Restriction:** GCC High blocks all external CDNs including:
+- Google Fonts (`fonts.googleapis.com`)
+- npm public CDN
+- Public icon libraries
+- Any external JavaScript/CSS resources
+
+**Solution:**
+- Bundle all fonts as base64 or upload to SharePoint CDN
+- Self-host all assets in SharePoint Site Assets or Style Library
+- Use Fluent UI icons (bundled with SPFx)
+- No runtime external dependencies
+
+#### 2. API Endpoint Differences
+**GCC Endpoints:**
+- Graph API: `https://graph.microsoft.us` (not `.com`)
+- SharePoint API: `https://tenant.sharepoint.us`
+
+**Impact:** All SPFx code must detect environment and use appropriate endpoints
+
+#### 3. SPFx Version Requirements
+**Minimum:** SPFx 1.21.1 (confirmed GCC-compatible)
+**React Version:** 17.0.2 only (bundled with SPFx)
+**Node.js:** v22 LTS
+
+#### 4. Compliance Certifications
+GCC High provides:
+- FedRAMP High authorization
+- CMMC Level 2 compliance
+- ITAR compatibility
+- DFARS 7012 compliance
+
+**Impact:** All user data must remain within GCC boundary (SharePoint Lists = compliant ✅)
+
+### GCC Deployment Checklist
+
+Before deploying to GCC, verify:
+- [ ] No external CDN references in code
+- [ ] All fonts self-hosted or using system fonts
+- [ ] All icons from Fluent UI MDL2 (no external icon fonts)
+- [ ] API endpoints use `.us` domain
+- [ ] Bundle size under SharePoint limits (10MB uncompressed)
+- [ ] No public npm packages loaded at runtime
+- [ ] SPFx solution package (.sppkg) includes all dependencies
+- [ ] Content Security Policy (CSP) compliance tested
+- [ ] User profile service available in GCC tenant
+- [ ] App Catalog access confirmed
+
+---
+
+## Component Mapping: React → SPFx
+
+### UI Component Library Migration
+
+| Current (React App) | Replacement (SPFx) | Notes |
+|---------------------|-------------------|-------|
+| **Radix UI Accordion** | Fluent UI DetailsList | Different API, similar functionality |
+| **Radix UI Dialog** | Fluent UI Dialog | Direct mapping |
+| **Radix UI Select** | Fluent UI Dropdown | Direct mapping |
+| **Radix UI RadioGroup** | Fluent UI ChoiceGroup | Direct mapping |
+| **Radix UI Checkbox** | Fluent UI Checkbox | Direct mapping |
+| **Radix UI Progress** | Fluent UI ProgressIndicator | Direct mapping |
+| **Radix UI Tooltip** | Fluent UI TooltipHost | Direct mapping |
+| **Custom Button** | Fluent UI PrimaryButton/DefaultButton | Direct mapping |
+
+### Data Visualization
+
+| Current | Replacement | Notes |
+|---------|-------------|-------|
+| **Recharts** (not used) | @fluentui/react-charting DonutChart | OR custom SVG (recommended) |
+| **Custom SVG Progress Ring** | Keep as-is | No changes needed (0KB, works perfectly) |
+
+### Icons
+
+| Current | Replacement | Migration Tool |
+|---------|-------------|---------------|
+| **Material Symbols Rounded** (1000+ icons) | Fluent UI Icons MDL2 | [Icon mapping reference](https://uifabricicons.azurewebsites.net/) |
+| `face` | `Contact` | - |
+| `emoji_events` | `Trophy2` | - |
+| `progress_activity` | `ProgressRingDots` | - |
+| `home` | `Home` | - |
+| `bookmark` | `FavoriteStar` / `FavoriteStarFill` | - |
+
+### Forms & Validation
+
+| Current | Replacement | Notes |
+|---------|-------------|-------|
+| **React Hook Form** | Manual useState + validation | Simpler for basic forms |
+| **Zod validation** | Custom validation functions | or Yup if complex validation needed |
+
+### Markdown Rendering
+
+| Current | Replacement | Notes |
+|---------|-------------|-------|
+| **react-markdown 10.1.0** | markdown-to-jsx | Lighter, proven in SPFx projects |
+
+### Data Persistence
+
+| Current | Replacement | Benefits |
+|---------|-------------|----------|
+| **localStorage** | SharePoint Lists + PnPClientStorage cache | Cross-device sync, persistent, auditable |
+| `aph_user_profile` | UserProfiles SharePoint List | - |
+| `aph_user_progress` | UserProgress SharePoint List | - |
+
+---
+
+## Updated Cost Estimate
+
+### Development Costs (Rebuild Approach)
+
+| Phase | Hours | Rate | Cost | Notes |
+|-------|-------|------|------|-------|
+| **Environment Assessment** | 20 | $150/hr | $3,000 | NEW: GCC tenant config, CSP testing |
+| Site setup & lists | 40 | $150/hr | $6,000 | Same |
+| **SPFx development** | 160 | $150/hr | $24,000 | +40h for Radix→Fluent migration |
+| **Build tool migration** | 40 | $150/hr | $6,000 | NEW: Vite→Webpack conversion |
+| Content migration | 60 | $100/hr | $6,000 | -20h (simpler than expected) |
+| Forms & automation | 20 | $150/hr | $3,000 | Same |
+| Styling & branding | 50 | $125/hr | $6,250 | +10h for font self-hosting |
+| **Integration testing** | 30 | $125/hr | $3,750 | NEW: GCC-specific testing |
+| Testing & QA | 60 | $100/hr | $6,000 | +20h for thorough testing |
+| **Total** | **480 hours** | | **$64,000** | +140 hours vs. original |
+
+### Licensing Costs
+- **SharePoint Online**: Included in Microsoft 365 E3/E5 or GCC equivalents
+- **Power Automate**: 500 runs/month included
+- **GCC High**: May require separate licensing (check with Microsoft)
+
+**Total Project Cost:** $64,000 (development only)
+
+---
+
+## Phase 0: Pre-Implementation Assessment
+
+### Week 1: GCC Environment Validation
+
+**Objectives:**
+- Confirm GCC or GCC High tier
+- Document tenant CSP policies
+- Test external resource loading
+- Verify SharePoint Framework support
+
+**Tasks:**
+- [ ] Identify SharePoint Online tenant URL (`.sharepoint.us` for GCC)
+- [ ] Contact SharePoint admin for tenant settings
+- [ ] Document Content Security Policy configuration
+- [ ] Test font loading from Style Library
+- [ ] Verify User Profile Service availability
+- [ ] Check App Catalog access and permissions
+- [ ] Confirm SPFx version support (1.21.1+)
+- [ ] Test web part deployment process
+
+### Week 2: Dependency Audit & POC
+
+**Objectives:**
+- Test critical dependencies in GCC
+- Build minimal proof-of-concept
+- Validate technical approach
+
+**Tasks:**
+- [ ] Create minimal SPFx project
+- [ ] Import one component (Assessment) with Fluent UI
+- [ ] Test in GCC SharePoint Workbench
+- [ ] Measure bundle size
+- [ ] Test SharePoint List CRUD operations
+- [ ] Verify Fluent UI theme integration
+- [ ] Document any blockers or issues
+- [ ] Get stakeholder approval to proceed
+
+**Deliverable:** 1-page technical feasibility report
 
 ---
 
@@ -602,13 +821,22 @@ Apply APH brand colors and spacing to SharePoint pages:
 
 ---
 
-## Phase 7: Implementation Steps
+## Phase 7: Implementation Steps (Updated for Rebuild)
+
+### Step 0: Pre-Implementation Assessment (2 weeks) - NEW
+- [ ] Validate GCC tenant access and configuration
+- [ ] Test external dependency loading (fonts, CDNs)
+- [ ] Build minimal SPFx proof-of-concept
+- [ ] Measure baseline bundle size
+- [ ] Get stakeholder approval to proceed
+- [ ] Finalize technical specifications
 
 ### Step 1: Site Provisioning (1 week)
 - [ ] Create SharePoint Hub Site
 - [ ] Set up navigation (top nav + quick launch)
 - [ ] Apply APH theme (colors, logo)
 - [ ] Create folder structure (SitePages, Style Library, etc.)
+- [ ] Upload self-hosted fonts to Style Library (GCC requirement)
 
 ### Step 2: List Creation (3 days)
 - [ ] Create "User Profiles" list with columns
@@ -616,22 +844,29 @@ Apply APH brand colors and spacing to SharePoint pages:
 - [ ] Create "Quiz Responses" list with columns
 - [ ] Create "Bookmarks" list with columns
 - [ ] Set item-level permissions on all lists
+- [ ] Test list CRUD operations from SPFx Workbench
 
 ### Step 3: Content Migration (2 weeks)
 - [ ] Create 34 module pages (use template for consistency)
 - [ ] Paste module content from React app (moduleData.ts)
 - [ ] Format content with rich text editor
+- [ ] Replace Material Symbols icons with Fluent UI MDL2
 - [ ] Add images/diagrams where needed
 - [ ] Create Resources page with document library
 - [ ] Create Support page with contact info
 
-### Step 4: SPFx Development (3-4 weeks)
-- [ ] Set up SPFx development environment
-- [ ] Build "Progress Dashboard" web part
-- [ ] Build "Module Progress Bar" web part
-- [ ] Build "Interactive Quiz" web part
+### Step 4: SPFx Development (4-5 weeks) - UPDATED
+- [ ] Set up SPFx 1.21.1+ development environment (Node 22 LTS)
+- [ ] Configure Webpack for GCC compliance (no external CDNs)
+- [ ] Build "Assessment" component with Fluent UI ChoiceGroup
+- [ ] Build "Progress Dashboard" web part with Fluent UI components
+- [ ] Implement custom SVG progress ring (or @fluentui/react-charting)
+- [ ] Build "Interactive Quiz" web part with Fluent UI RadioButton
 - [ ] Build "Module Navigation" web part
-- [ ] Test all web parts locally
+- [ ] Implement SharePointService.ts (replace storage.ts)
+- [ ] Add PnPClientStorage caching layer
+- [ ] Test all web parts in SharePoint Workbench (local & online)
+- [ ] Optimize bundle size (remove unused dependencies)
 - [ ] Package and deploy to App Catalog
 
 ### Step 5: Forms & Automation (1 week)
@@ -639,23 +874,48 @@ Apply APH brand colors and spacing to SharePoint pages:
 - [ ] Build Power Automate flow to process responses
 - [ ] Test flow writes to "User Profiles" list correctly
 - [ ] Add redirect logic after form submission
+- [ ] Handle error cases (network failures, etc.)
 
-### Step 6: Styling & Polish (1 week)
+### Step 6: Styling & Polish (1.5 weeks) - UPDATED
+- [ ] Create Fluent UI theme with APH brand colors
 - [ ] Upload custom CSS to Style Library
 - [ ] Apply CSS to all pages
-- [ ] Test mobile responsiveness
-- [ ] Add brand assets (logos, icons)
-- [ ] Ensure WCAG 2.1 AA compliance
+- [ ] Test mobile responsiveness across devices
+- [ ] Add brand assets (logos, self-hosted icons)
+- [ ] Ensure WCAG 2.2 AA compliance
+- [ ] Verify no external CDN calls (Network tab audit)
 
-### Step 7: Testing & Launch (2 weeks)
+### Step 7: GCC-Specific Testing (1 week) - NEW
+- [ ] Deploy to GCC test site
+- [ ] Verify all fonts load correctly (no external CDN calls)
+- [ ] Test all Fluent UI components render properly
+- [ ] Validate SharePoint List permissions in GCC
+- [ ] Test cross-device sync (desktop + mobile)
+- [ ] Verify Content Security Policy compliance
+- [ ] Load testing with 50+ concurrent users
+- [ ] Document any GCC-specific issues
+
+### Step 8: Testing & Launch (2 weeks)
 - [ ] User acceptance testing (UAT) with 5-10 POs
 - [ ] Fix bugs and gather feedback
-- [ ] Load testing (100+ concurrent users)
+- [ ] Performance testing (page load times, bundle size)
 - [ ] Train support staff on how to update content
-- [ ] Soft launch to pilot group
+- [ ] Create admin documentation
+- [ ] Soft launch to pilot group (20-30 users)
+- [ ] Monitor for issues, collect feedback
 - [ ] Full launch communication
+- [ ] Post-launch support plan
 
-**Total Timeline**: 10-12 weeks
+**Updated Timeline**: 12-14 weeks (vs. 10-12 weeks original estimate)
+
+**Timeline Breakdown:**
+- Weeks 1-2: Pre-assessment & POC
+- Weeks 3-4: Site setup & list creation
+- Weeks 5-6: Content migration
+- Weeks 7-11: SPFx development (4-5 weeks)
+- Week 12: Forms & automation
+- Weeks 13-14: Styling, testing, GCC validation
+- Weeks 15-16: UAT & launch (may overlap with Week 14)
 
 ---
 
@@ -760,43 +1020,86 @@ Apply APH brand colors and spacing to SharePoint pages:
 
 ---
 
-## Risks & Mitigation
+## Risks & Mitigation (Updated for GCC Rebuild)
+
+### Critical Risks
 
 | Risk | Impact | Likelihood | Mitigation |
 |------|--------|-----------|------------|
-| SPFx development complexity | High | Medium | Start with simpler web parts; consider Power Apps alternative |
-| User adoption challenges | High | Low | Pilot testing; training sessions; feedback loops |
-| Performance issues (large lists) | Medium | Low | Implement list indexing; use paging in web parts |
+| **External CDN dependencies discovered at runtime** | Critical | Medium | Thorough bundle analysis; test in GCC sandbox early; Network tab monitoring |
+| **React 18 → React 17 breaking changes** | High | Medium | Audit current hooks usage; test migration; avoid concurrent features |
+| **Radix UI → Fluent UI conversion issues** | High | Medium | Build POC first; test each component; maintain design parity |
+| **Bundle size exceeds SharePoint limit (10MB)** | High | Medium | Aggressive tree-shaking; remove unused Radix components; code splitting |
+| **GCC CSP blocks critical functionality** | Critical | Low | Test fonts, icons, assets in GCC early; self-host everything |
+
+### High Risks
+
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|-----------|------------|
+| SPFx development complexity | High | Medium | Start with POC; validate approach; hire SPFx specialist if needed |
+| SharePoint List permissions misconfiguration | High | Medium | Use PnP provisioning scripts; test with multiple user accounts |
+| User adoption challenges | High | Low | Pilot testing with 20-30 users; training sessions; feedback loops |
+| Vite → Webpack build migration issues | High | Medium | Study SPFx Webpack config; test early; document differences |
+
+### Medium Risks
+
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|-----------|------------|
+| Performance degradation vs. current React app | Medium | High | Optimize bundle; use PnPClientStorage; lazy loading |
+| Fluent UI theming doesn't match APH brand | Medium | Medium | Custom theme with CSS overrides; design review checkpoints |
+| Cross-device sync latency | Medium | High | PnPClientStorage with 10-min expiration; "Pull to refresh" option |
+| Data migration from localStorage lost | Medium | Low | Provide export/import tool; accept data loss for demo users |
 | SharePoint permissions complexity | Medium | Medium | Use OOTB item-level permissions; document clearly |
 | Content updates break web parts | Low | Low | Use `module-config.json` for metadata; decouple from page content |
-| Browser compatibility | Low | Low | Test in Edge, Chrome, Firefox; SharePoint is well-supported |
+
+### Low Risks
+
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|-----------|------------|
+| Browser compatibility in GCC | Low | Low | Test in Edge (primary GCC browser); provide compatibility docs |
+| Icon mapping incomplete | Low | Low | Fluent UI MDL2 has 1000+ icons; manual mapping for critical ones |
+| Accessibility regression | Low | Low | Fluent UI is WCAG 2.2 AA by default; conduct audit |
+| markdown-to-jsx rendering issues | Low | Low | Test all module content during migration; have fallback |
+
+### NEW: GCC-Specific Risks
+
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|-----------|------------|
+| **GCC High tenant restrictions unknown** | Critical | Medium | Early engagement with SharePoint admin; document all restrictions |
+| **Font loading failures** | Medium | Medium | Self-host fonts in Style Library; test early; fallback to system fonts |
+| **User Profile Service unavailable** | High | Low | Verify service availability; implement fallback to email-based identification |
+| **App Catalog deployment blocked** | Critical | Low | Confirm deployment permissions before starting; work with tenant admin |
+| **SPFx version incompatibility** | High | Low | Use SPFx 1.21.1+ (confirmed GCC-compatible); verify in POC |
 
 ---
 
-## Recommendations
+## Recommendations (Updated for GCC)
 
-### ✅ Use SharePoint If:
+### ✅ Rebuild on SharePoint If:
+- **GCC deployment is required** (government compliance) ✅ **RECOMMENDED FOR APH**
 - Non-developers need to update content frequently
 - You want persistent progress tracking across devices
 - You need built-in search and analytics
-- Budget allows for SPFx development time
 - Organization standardizes on SharePoint for intranets
+- Cross-device sync is important
+- You need audit trails and usage analytics
 
 ### ❌ Keep React If:
+- You don't need GCC compliance (but APH does)
 - You need maximum performance (SPA experience)
 - You want complete control over UI/UX
-- You have dedicated React developers
-- Budget is constrained (SharePoint migration = $44K)
-- Users prefer standalone web app over SharePoint
+- You have dedicated React developers (no SharePoint expertise)
+- Budget is constrained (rebuild = $64K vs. current $0 hosting)
+- External CDN usage is acceptable
 
-### 🎯 Hybrid Approach (Recommended):
-**Keep React app as the primary experience**, but create a **simplified SharePoint version** for:
-- Content discoverability (SharePoint Search)
-- Mobile users (easier auth with SharePoint mobile app)
-- Users who prefer SharePoint's familiar interface
-- Integration with other APH SharePoint sites
+### 🚫 Hybrid Approach NOT Recommended for GCC:
+The original "hybrid approach" recommendation is **NOT viable** for GCC deployment because:
+- Current React app uses external CDNs (blocked in GCC)
+- Can't iframe GitHub Pages into GCC SharePoint (security policy)
+- Two separate systems = confusion and double maintenance
+- GCC users can't access public GitHub Pages
 
-**Cost**: ~$20K (simplified version with fewer custom web parts)
+**For GCC, choose one platform only:** Rebuild on SharePoint is the recommended path.
 
 ---
 
@@ -935,21 +1238,39 @@ export default class ModuleNavigationWebPart extends BaseClientSideWebPart<IModu
 
 ---
 
-**Document Version**: 1.0
+**Document Version**: 2.0 (Updated for GCC Rebuild Approach)
 **Last Updated**: January 2025
 **Contact**: APH Product Governance Team
+**Related Documents**:
+- See `SPFX_REBUILD_GUIDE.md` for step-by-step implementation instructions
+- See `SHAREPOINT_GCC_REQUIREMENTS.md` for detailed compliance documentation
 
 ---
 
-## Quick Reference: SharePoint vs. React Feature Matrix
+## Quick Reference: SharePoint vs. React Feature Matrix (Updated)
 
-| Component | React Implementation | SharePoint Equivalent | Complexity |
-|-----------|---------------------|----------------------|------------|
-| Assessment | `Assessment.tsx` | Microsoft Forms | ⭐ Easy |
-| Dashboard | `Dashboard.tsx` | SPFx web part | ⭐⭐⭐ Medium |
-| Module View | `ModuleView.tsx` | SP Page + SPFx quiz | ⭐⭐ Medium |
-| Progress Storage | localStorage | SharePoint lists | ⭐⭐ Medium |
-| Navigation | React Router | Hyperlinks + SPFx | ⭐⭐ Medium |
-| Styling | CSS-in-JS | Custom CSS file | ⭐ Easy |
+| Component | React Implementation | SPFx Rebuild Equivalent | GCC Compatibility | Complexity |
+|-----------|---------------------|------------------------|-------------------|------------|
+| **Assessment** | `Assessment.tsx` (Radix UI) | Fluent UI ChoiceGroup | ✅ Compatible | ⭐⭐ Medium |
+| **Dashboard** | `Dashboard.tsx` (Recharts) | Custom SVG or Fluent UI DonutChart | ✅ Compatible | ⭐⭐⭐ Medium-High |
+| **Module View** | `ModuleView.tsx` (react-markdown) | markdown-to-jsx + Fluent UI | ✅ Compatible | ⭐⭐ Medium |
+| **Progress Storage** | localStorage (device-specific) | SharePoint Lists + PnPClientStorage | ✅ Compatible | ⭐⭐⭐ Medium |
+| **Navigation** | State-based (no routing) | State-based SPFx component | ✅ Compatible | ⭐⭐ Medium |
+| **UI Components** | Radix UI (27+ packages) | Fluent UI v8 | ✅ Compatible | ⭐⭐⭐ Medium-High |
+| **Icons** | Material Symbols CDN | Fluent UI MDL2 (bundled) | ✅ Compatible | ⭐⭐ Medium |
+| **Fonts** | Google Fonts CDN | Self-hosted or system fonts | ✅ Compatible | ⭐⭐ Medium |
+| **Build Tool** | Vite 6.0.1 | Webpack 5 (SPFx) | ✅ Compatible | ⭐⭐⭐⭐ High |
+| **Styling** | Tailwind CSS + Custom CSS | Fluent UI theme + Custom SCSS | ✅ Compatible | ⭐⭐ Medium |
 
-This guide provides everything needed to successfully migrate the adaptive micro-learning portal to SharePoint while preserving the core user experience and personalization features!
+### Key Differences: Current React vs. GCC-Compatible SPFx
+
+| Aspect | Current React App | GCC-Compatible SPFx | Impact |
+|--------|------------------|---------------------|--------|
+| **External Dependencies** | ❌ Google Fonts, Material Symbols | ✅ Self-hosted, bundled | GCC requires rebuild |
+| **React Version** | ❌ React 18.3.1 | ✅ React 17.0.2 (SPFx bundled) | May need hook adjustments |
+| **Build System** | ❌ Vite (incompatible) | ✅ Webpack (SPFx standard) | Slower dev experience |
+| **Data Persistence** | Device-only (localStorage) | Cross-device (SharePoint Lists) | ✅ Better UX |
+| **Deployment** | GitHub Pages (1 min) | App Catalog (5 min) | Slightly slower |
+| **GCC Compliance** | ❌ Not compliant | ✅ Fully compliant | Required for government |
+
+This guide provides everything needed to successfully rebuild the adaptive micro-learning portal on SharePoint with full GCC compliance while preserving the core user experience and personalization features!

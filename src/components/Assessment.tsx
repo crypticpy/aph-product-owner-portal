@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '@fluentui/react/lib/Icon';
 import { ExperienceLevel, GovernanceTier, TimeCommitment, LearningPath, UserProfile } from '../types';
 import { calculatePathDuration } from '../moduleData';
 
@@ -48,21 +49,21 @@ export function Assessment({ onComplete }: AssessmentProps) {
       duration: calculatePathDuration('express'),
       modules: 8,
       description: 'Quick setup for experienced Product Owners',
-      icon: 'bolt'
+      icon: 'LightningBolt'
     },
     standard: {
       name: 'Standard Track',
       duration: calculatePathDuration('standard'),
       modules: 20,
       description: 'Comprehensive onboarding for new Product Owners',
-      icon: 'school'
+      icon: 'Education'
     },
     comprehensive: {
       name: 'Comprehensive Track',
       duration: calculatePathDuration('comprehensive'),
       modules: 34,
       description: 'Deep-dive training for complex products',
-      icon: 'workspace_premium'
+      icon: 'Certificate'
     }
   };
 
@@ -70,9 +71,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
     <div className="assessment-container">
       <div className="assessment-card">
         <div className="assessment-header">
-          <span className="material-symbols-rounded" style={{ fontSize: '48px', color: 'var(--color-primary)' }} aria-hidden="true">
-            psychology
-          </span>
+          <Icon iconName="Brain" style={{ fontSize: '48px', color: 'var(--color-primary)' }} aria-hidden="true" />
           <h1 className="h2" style={{ marginTop: 'var(--space-3)' }}>Welcome to APH Product Owner Program!</h1>
           <p className="lead" style={{ color: 'var(--color-text)', opacity: 0.8 }}>
             Let's personalize your learning experience
@@ -98,7 +97,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${experienceLevel === 'new' ? 'selected' : ''}`}
                   onClick={() => setExperienceLevel('new')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">face</span>
+                  <Icon iconName="Contact" aria-hidden="true" />
                   <strong>I'm brand new</strong>
                   <span className="option-description">First time as a Product Owner</span>
                 </button>
@@ -107,7 +106,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${experienceLevel === 'somewhat' ? 'selected' : ''}`}
                   onClick={() => setExperienceLevel('somewhat')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">progress_activity</span>
+                  <Icon iconName="ProgressRingDots" aria-hidden="true" />
                   <strong>I have some experience</strong>
                   <span className="option-description">I've done similar work before</span>
                 </button>
@@ -116,7 +115,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${experienceLevel === 'experienced' ? 'selected' : ''}`}
                   onClick={() => setExperienceLevel('experienced')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">emoji_events</span>
+                  <Icon iconName="Trophy2" aria-hidden="true" />
                   <strong>I'm experienced</strong>
                   <span className="option-description">I've been a PO at other organizations</span>
                 </button>
@@ -129,7 +128,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                 disabled={!experienceLevel}
               >
                 Continue
-                <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">arrow_forward</span>
+                <Icon iconName="ChevronRight" style={{ fontSize: '20px' }} aria-hidden="true" />
               </button>
             </div>
           )}
@@ -147,7 +146,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${governanceTier === 'tier1-2' ? 'selected' : ''}`}
                   onClick={() => setGovernanceTier('tier1-2')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">security</span>
+                  <Icon iconName="Shield" aria-hidden="true" />
                   <strong>Tier 1-2 (High Risk)</strong>
                   <span className="option-description">Handles PHI/PII or mission-critical</span>
                 </button>
@@ -156,7 +155,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${governanceTier === 'tier3-4' ? 'selected' : ''}`}
                   onClick={() => setGovernanceTier('tier3-4')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">verified</span>
+                  <Icon iconName="SkypeCircleCheck" aria-hidden="true" />
                   <strong>Tier 3-4 (Standard)</strong>
                   <span className="option-description">Internal tools, low-risk systems</span>
                 </button>
@@ -165,7 +164,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${governanceTier === 'not-sure' ? 'selected' : ''}`}
                   onClick={() => setGovernanceTier('not-sure')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">help</span>
+                  <Icon iconName="Unknown" aria-hidden="true" />
                   <strong>Not sure yet</strong>
                   <span className="option-description">We'll help you figure it out</span>
                 </button>
@@ -176,7 +175,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className="btn btn--secondary"
                   onClick={() => setStep(1)}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">arrow_back</span>
+                  <Icon iconName="ChevronLeft" style={{ fontSize: '20px' }} aria-hidden="true" />
                   Back
                 </button>
                 <button
@@ -186,7 +185,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   style={{ flex: 1 }}
                 >
                   Continue
-                  <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">arrow_forward</span>
+                  <Icon iconName="ChevronRight" style={{ fontSize: '20px' }} aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -205,7 +204,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${timeCommitment === 'less-than-1' ? 'selected' : ''}`}
                   onClick={() => setTimeCommitment('less-than-1')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">schedule</span>
+                  <Icon iconName="Clock" aria-hidden="true" />
                   <strong>Less than 1 hour</strong>
                   <span className="option-description">Just the essentials</span>
                 </button>
@@ -214,7 +213,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${timeCommitment === '1-to-3' ? 'selected' : ''}`}
                   onClick={() => setTimeCommitment('1-to-3')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">event</span>
+                  <Icon iconName="Calendar" aria-hidden="true" />
                   <strong>1-3 hours</strong>
                   <span className="option-description">Standard onboarding pace</span>
                 </button>
@@ -223,7 +222,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className={`option-card ${timeCommitment === 'more-than-3' ? 'selected' : ''}`}
                   onClick={() => setTimeCommitment('more-than-3')}
                 >
-                  <span className="material-symbols-rounded" aria-hidden="true">today</span>
+                  <Icon iconName="CalendarDay" aria-hidden="true" />
                   <strong>3+ hours</strong>
                   <span className="option-description">Deep dive into everything</span>
                 </button>
@@ -232,9 +231,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
               {timeCommitment && experienceLevel && governanceTier && (
                 <div className="path-preview">
                   <div style={{ textAlign: 'center', marginBottom: 'var(--space-4)' }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: '64px', color: 'var(--color-primary)' }} aria-hidden="true">
-                      {pathInfo[determineLearningPath()].icon}
-                    </span>
+                    <Icon iconName={pathInfo[determineLearningPath()].icon} style={{ fontSize: '64px', color: 'var(--color-primary)' }} aria-hidden="true" />
                     <h3 className="h3" style={{ marginTop: 'var(--space-3)', marginBottom: 'var(--space-2)' }}>
                       Your Personalized Path: {pathInfo[determineLearningPath()].name}
                     </h3>
@@ -245,21 +242,21 @@ export function Assessment({ onComplete }: AssessmentProps) {
 
                   <div className="path-stats">
                     <div className="stat">
-                      <span className="material-symbols-rounded" aria-hidden="true">widgets</span>
+                      <Icon iconName="GridViewMedium" aria-hidden="true" />
                       <div>
                         <strong>{pathInfo[determineLearningPath()].modules} modules</strong>
                         <span>Bite-sized lessons</span>
                       </div>
                     </div>
                     <div className="stat">
-                      <span className="material-symbols-rounded" aria-hidden="true">schedule</span>
+                      <Icon iconName="Clock" aria-hidden="true" />
                       <div>
                         <strong>~{Math.round(pathInfo[determineLearningPath()].duration / 60)} hours</strong>
                         <span>Total time investment</span>
                       </div>
                     </div>
                     <div className="stat">
-                      <span className="material-symbols-rounded" aria-hidden="true">trending_up</span>
+                      <Icon iconName="TrendingUp" aria-hidden="true" />
                       <div>
                         <strong>Track progress</strong>
                         <span>See your achievements</span>
@@ -274,7 +271,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   className="btn btn--secondary"
                   onClick={() => setStep(2)}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">arrow_back</span>
+                  <Icon iconName="ChevronLeft" style={{ fontSize: '20px' }} aria-hidden="true" />
                   Back
                 </button>
                 <button
@@ -284,7 +281,7 @@ export function Assessment({ onComplete }: AssessmentProps) {
                   style={{ flex: 1 }}
                 >
                   Start My Journey
-                  <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">rocket_launch</span>
+                  <Icon iconName="Rocket" style={{ fontSize: '20px' }} aria-hidden="true" />
                 </button>
               </div>
             </div>

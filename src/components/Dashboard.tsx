@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '@fluentui/react/lib/Icon';
 import { UserProfile, UserProgress, LearningPath } from '../types';
 import { getModulesForPath, calculatePathDuration } from '../moduleData';
 
@@ -37,9 +38,9 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
   const bookmarkedModules = pathModules.filter(m => userProgress.bookmarkedModules.includes(m.id));
 
   const pathInfo: Record<LearningPath, { name: string; icon: string; color: string }> = {
-    express: { name: 'Express Track', icon: 'bolt', color: '#FF8F00' },
-    standard: { name: 'Standard Track', icon: 'school', color: '#009F4D' },
-    comprehensive: { name: 'Comprehensive Track', icon: 'workspace_premium', color: '#44499C' }
+    express: { name: 'Express Track', icon: 'LightningBolt', color: '#FF8F00' },
+    standard: { name: 'Standard Track', icon: 'Education', color: '#009F4D' },
+    comprehensive: { name: 'Comprehensive Track', icon: 'Certificate', color: '#44499C' }
   };
 
   const currentPath = pathInfo[userProfile.learningPath];
@@ -73,9 +74,7 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
               <h2 className="h3">Your Progress</h2>
               <p className="card-subtitle">{currentPath.name}</p>
             </div>
-            <span className="material-symbols-rounded path-icon" style={{ color: currentPath.color }} aria-hidden="true">
-              {currentPath.icon}
-            </span>
+            <Icon iconName={currentPath.icon} className="path-icon" style={{ color: currentPath.color, fontSize: '48px' }} aria-hidden="true" />
           </div>
 
           {/* Progress Ring */}
@@ -118,21 +117,21 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
           {/* Stats Grid */}
           <div className="stats-grid">
             <div className="stat-item" title="Total modules you've completed in your learning path">
-              <span className="material-symbols-rounded" aria-hidden="true">check_circle</span>
+              <Icon iconName="CompletedSolid" style={{ fontSize: '32px', color: 'var(--color-primary)' }} aria-hidden="true" />
               <div>
                 <strong>{completedCount}</strong>
                 <span>of {totalModules} modules</span>
               </div>
             </div>
             <div className="stat-item" title="Total time invested in learning">
-              <span className="material-symbols-rounded" aria-hidden="true">schedule</span>
+              <Icon iconName="Clock" style={{ fontSize: '32px', color: 'var(--color-primary)' }} aria-hidden="true" />
               <div>
                 <strong>{Math.round(completedDuration / 60)}h</strong>
                 <span>of {Math.round(totalDuration / 60)}h completed</span>
               </div>
             </div>
             <div className="stat-item" title="Modules saved for quick reference later">
-              <span className="material-symbols-rounded" aria-hidden="true">bookmark</span>
+              <Icon iconName="FavoriteStar" style={{ fontSize: '32px', color: 'var(--color-primary)' }} aria-hidden="true" />
               <div>
                 <strong>{userProgress.bookmarkedModules.length}</strong>
                 <span>bookmarked</span>
@@ -142,7 +141,7 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
 
           <button className="btn btn--primary btn-block" onClick={onStartLearning}>
             {completedCount === 0 ? 'Start Learning' : 'Continue Learning'}
-            <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">arrow_forward</span>
+            <Icon iconName="ChevronRight" style={{ fontSize: '20px' }} aria-hidden="true" />
           </button>
         </div>
 
@@ -168,7 +167,7 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
                     <p>{module.description}</p>
                     <div className="module-meta-row">
                       <span className="meta-badge">
-                        <span className="material-symbols-rounded" aria-hidden="true">schedule</span>
+                        <Icon iconName="Clock" style={{ fontSize: '14px' }} aria-hidden="true" />
                         {module.duration} min
                       </span>
                       <span className={`meta-badge priority-${module.priority}`}>
@@ -176,9 +175,7 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
                       </span>
                     </div>
                   </div>
-                  <span className="material-symbols-rounded" style={{ fontSize: '24px', color: 'var(--color-primary)', marginLeft: 'auto' }} aria-hidden="true">
-                    arrow_forward
-                  </span>
+                  <Icon iconName="ChevronRight" style={{ fontSize: '24px', color: 'var(--color-primary)', marginLeft: 'auto' }} aria-hidden="true" />
                 </button>
               ))}
             </div>
@@ -189,8 +186,8 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
         {bookmarkedModules.length > 0 ? (
           <div className="dashboard-card">
             <div className="card-header-dash">
-              <h2 className="h3">
-                <span className="material-symbols-rounded" aria-hidden="true">bookmark</span>
+              <h2 className="h3" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                <Icon iconName="FavoriteStar" aria-hidden="true" />
                 Bookmarked for Later
               </h2>
               <span className="card-subtitle">{bookmarkedModules.length} saved</span>
@@ -199,13 +196,13 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
             <div className="module-list">
               {bookmarkedModules.map(module => (
                 <div key={module.id} className="module-item">
-                  <span className="material-symbols-rounded bookmark-icon" aria-hidden="true">bookmark</span>
+                  <Icon iconName="FavoriteStar" className="bookmark-icon" style={{ fontSize: '32px', color: 'var(--color-primary)' }} aria-hidden="true" />
                   <div className="module-info">
                     <h4>{module.title}</h4>
                     <p>{module.description}</p>
                     <div className="module-meta-row">
                       <span className="meta-badge">
-                        <span className="material-symbols-rounded" aria-hidden="true">schedule</span>
+                        <Icon iconName="Clock" style={{ fontSize: '14px' }} aria-hidden="true" />
                         {module.duration} min
                       </span>
                     </div>
@@ -217,9 +214,7 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
         ) : completedCount > 0 && (
           <div className="dashboard-card empty-state-card">
             <div style={{ textAlign: 'center', padding: 'var(--space-4)' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: '48px', color: 'var(--color-muted)', marginBottom: 'var(--space-3)' }} aria-hidden="true">
-                bookmark_border
-              </span>
+              <Icon iconName="FavoriteStarFill" style={{ fontSize: '48px', color: 'var(--color-muted)', marginBottom: 'var(--space-3)' }} aria-hidden="true" />
               <h3 className="h4" style={{ marginBottom: 'var(--space-2)' }}>No bookmarks yet</h3>
               <p style={{ color: 'var(--color-text)', opacity: 0.7, maxWidth: '400px', margin: '0 auto' }}>
                 Use the 🔖 bookmark button to save modules for quick reference later. Great for templates and checklists you'll use often!
@@ -234,30 +229,30 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
 
           <div className="action-links">
             <a href="#resources" className="action-link">
-              <span className="material-symbols-rounded" aria-hidden="true">folder_open</span>
+              <Icon iconName="FabricFolder" style={{ fontSize: '32px', color: 'var(--color-brand-blue)' }} aria-hidden="true" />
               <div>
                 <strong>Browse Resources</strong>
                 <span>Templates, guides, and documentation</span>
               </div>
-              <span className="material-symbols-rounded arrow" aria-hidden="true">arrow_forward</span>
+              <Icon iconName="ChevronRight" className="arrow" aria-hidden="true" />
             </a>
 
             <a href="#support" className="action-link">
-              <span className="material-symbols-rounded" aria-hidden="true">support_agent</span>
+              <Icon iconName="Headset" style={{ fontSize: '32px', color: 'var(--color-brand-blue)' }} aria-hidden="true" />
               <div>
                 <strong>Get Support</strong>
                 <span>Office hours and community</span>
               </div>
-              <span className="material-symbols-rounded arrow" aria-hidden="true">arrow_forward</span>
+              <Icon iconName="ChevronRight" className="arrow" aria-hidden="true" />
             </a>
 
             <button className="action-link" onClick={onResetProfile}>
-              <span className="material-symbols-rounded" aria-hidden="true">refresh</span>
+              <Icon iconName="Refresh" style={{ fontSize: '32px', color: 'var(--color-brand-blue)' }} aria-hidden="true" />
               <div>
                 <strong>Change Learning Path</strong>
                 <span>Retake the assessment</span>
               </div>
-              <span className="material-symbols-rounded arrow" aria-hidden="true">arrow_forward</span>
+              <Icon iconName="ChevronRight" className="arrow" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -266,9 +261,7 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
         {completedCount === totalModules && (
           <div className="dashboard-card achievement-card">
             <div style={{ textAlign: 'center' }}>
-              <span className="material-symbols-rounded achievement-icon" aria-hidden="true">
-                emoji_events
-              </span>
+              <Icon iconName="Trophy2" className="achievement-icon" style={{ fontSize: '80px', color: '#FFD700' }} aria-hidden="true" />
               <h2 className="h2">Congratulations! 🎉</h2>
               <p className="lead-dash">
                 You've completed your {currentPath.name}! You're now ready to excel as an APH Product Owner.
@@ -276,7 +269,7 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
               <div className="achievement-actions">
                 <a href="#resources" className="btn btn--primary">
                   Explore Advanced Resources
-                  <span className="material-symbols-rounded" style={{ fontSize: '20px' }} aria-hidden="true">arrow_forward</span>
+                  <Icon iconName="ChevronRight" style={{ fontSize: '20px' }} aria-hidden="true" />
                 </a>
                 <a href="#support" className="btn btn--secondary">
                   Join the Community
@@ -419,11 +412,6 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
           border-radius: var(--radius-sm);
         }
 
-        .stat-item .material-symbols-rounded {
-          font-size: 32px;
-          color: var(--color-primary);
-        }
-
         .stat-item div {
           display: flex;
           flex-direction: column;
@@ -533,10 +521,6 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
           font-weight: 500;
         }
 
-        .meta-badge .material-symbols-rounded {
-          font-size: 14px;
-        }
-
         .meta-badge.priority-high {
           background: #FEE;
           color: #C00;
@@ -578,12 +562,6 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
           transform: translateX(4px);
         }
 
-        .action-link > .material-symbols-rounded:first-child {
-          font-size: 32px;
-          color: var(--color-brand-blue);
-          flex-shrink: 0;
-        }
-
         .action-link > div {
           flex: 1;
           display: flex;
@@ -595,7 +573,7 @@ export function Dashboard({ userProfile, userProgress, onStartLearning, onResetP
           font-size: var(--step-0);
         }
 
-        .action-link span:not(.material-symbols-rounded) {
+        .action-link > div > span {
           font-size: var(--step--1);
           opacity: 0.7;
         }
