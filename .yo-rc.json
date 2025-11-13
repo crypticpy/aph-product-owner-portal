@@ -1,0 +1,22 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "whichFolder": "subdir",
+    "solutionName": "aph-product-owner-portal",
+    "environment": "spo",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart",
+    "template": "react",
+    "componentName": "ProductOwnerPortal",
+    "componentDescription": "APH Product Owner adaptive learning portal with personalized onboarding",
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "24.10.0",
+    "sdksVersions": {},
+    "version": "1.21.1",
+    "libraryName": "aph-product-owner-portal",
+    "libraryId": "6e6c9df1-ad0b-4538-8065-6ab324000e4c",
+    "packageManager": "npm",
+    "solutionShortDescription": "aph-product-owner-portal description"
+  }
+}

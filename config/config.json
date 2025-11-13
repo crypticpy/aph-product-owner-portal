@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "product-owner-portal-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/productOwnerPortal/ProductOwnerPortalWebPart.js",
+          "manifest": "./src/webparts/productOwnerPortal/ProductOwnerPortalWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "ProductOwnerPortalWebPartStrings": "lib/webparts/productOwnerPortal/loc/{locale}.js"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "aph-product-owner-portal-client-side-solution",
+    "id": "6e6c9df1-ad0b-4538-8065-6ab324000e4c",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "Austin Public Health",
+      "websiteUrl": "https://www.austintexas.gov/department/austin-public-health",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.21.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Adaptive learning portal for Product Owners"
+      },
+      "longDescription": {
+        "default": "Personalized onboarding platform with 34 micro-learning modules, adaptive learning paths, and progress tracking for APH Product Owners"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "APH Product Owner Portal",
+        "description": "Adaptive micro-learning portal for Product Owner onboarding",
+        "id": "d4db5dbd-3771-4b3a-97ff-c0b2521a2a8d",
+        "version": "1.0.0.0"
+      }
+    ],
+    "webApiPermissionRequests": [
+      {
+        "resource": "SharePoint",
+        "scope": "User.ReadWrite.All"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/aph-product-owner-portal.sppkg"
+  }
+}
