@@ -30,7 +30,7 @@ A personalized, micro-learning platform for onboarding new Product Owners at Aus
 - **APH brand compliance** with official colors and guidelines
 - **WCAG 2.2 AA accessible** with proper contrast and keyboard navigation
 - **Mobile-optimized** responsive design
-- **Material Symbols** iconography for consistent visual language
+- **Fluent UI** components and icons (SharePoint-compatible)
 
 ### 💾 Persistent Progress
 - **localStorage** saves all progress locally
@@ -92,12 +92,13 @@ pnpm run preview
 
 ### Technology Stack
 
-- **Frontend**: React 18 + TypeScript
-- **Build Tool**: Vite 6
-- **Styling**: Tailwind CSS 3.4 + Custom CSS
-- **Storage**: localStorage
-- **Icons**: Google Material Symbols
-- **Markdown**: react-markdown
+- **Frontend**: React 18.3.1 + TypeScript 5.6.3
+- **Build Tool**: Vite 6.2.6
+- **UI Library**: Fluent UI v8.120.8 (SharePoint-compatible)
+- **Icons**: Fluent UI React Icons 2.0.314 (bundled, no CDN)
+- **Styling**: Tailwind CSS 3.4.16 + Custom CSS
+- **Markdown**: markdown-to-jsx 8.0.0
+- **Storage**: localStorage (converts to SharePoint Lists for deployment)
 
 ### Project Structure
 
@@ -155,9 +156,9 @@ npm i -g vercel
 vercel
 ```
 
-### SharePoint Migration
+### SharePoint Deployment
 
-See **[SHAREPOINT_MIGRATION_GUIDE.md](./SHAREPOINT_MIGRATION_GUIDE.md)** for complete instructions on migrating to SharePoint Online.
+See **[SHAREPOINT_DEPLOYMENT_GUIDE.md](./SHAREPOINT_DEPLOYMENT_GUIDE.md)** for step-by-step instructions on deploying to SharePoint Online with GCC compliance.
 
 ---
 
